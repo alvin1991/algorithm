@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import random
+
 
 class adrc_atp ( object ):
 
@@ -65,17 +67,17 @@ def fsg(x,d):
 
 def setup():
 	
-	ob = adrc_atp(fhan,fsg,sign,300000,0.01,2)
+	ob = adrc_atp(fhan,fsg,sign,300000,0.005,2)
 
 	#set cycle times
-	size=50
+	size=500
 
 	#set X axis value
 	X  = np.array(range(0,size))
 
 	Y_h0         = np.array(range(size), dtype = float)
 	Y_a0         = np.array(range(size), dtype = float)
-	Y_y          = np.array(range(size), dtype = float)
+	Y_s          = np.array(range(size), dtype = float)
 	Y_fh         = np.array(range(size), dtype = float)
 	Y_x1         = np.array(range(size), dtype = float)
 	Y_x2         = np.array(range(size), dtype = float)
@@ -83,11 +85,13 @@ def setup():
 
 	for k in np.arange ( size ):
 
-	 	ob.fhan(ob,1000)
+		Y_s[k]  = 1000*math.sin(k%180/57.29) + random.randint(-200,200)
+	 	ob.fhan(ob,Y_s[k])
 	 	Y_h0[k] = ob.h0
 	 	Y_fh[k] = ob.fh
 	 	Y_x1[k] = ob.x1
 	 	Y_x2[k] = ob.x2
+
 	        
 
 	fig = plt.figure()
@@ -103,6 +107,7 @@ def setup():
 	ax2.set_xlabel("cycle time")
 	ax2.set_ylabel("rate")
 	ax2.plot(X, Y_x1,  color='green', label='x1')
+	ax2.plot(X, Y_s,  color='red', label='signal')
 	ax2.legend()
 
 	ax3.set_xlabel("cycle time")
